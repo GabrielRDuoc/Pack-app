@@ -1,0 +1,41 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>ingresar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">ingresar</ion-title>
+    </ion-toolbar>
+  </ion-header>
+</ion-content>
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Ingreso de paquete</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+</ion-content>
+<ion-content>
+  <ion-item>
+    <ion-list>
+      <ion-item>
+        <ion-select [(ngModel)]="departamento" aria-label="departamento" placeholder="numero departamento">
+          <ion-select-option value="201">201</ion-select-option>
+          <ion-select-option value="202">202</ion-select-option>
+          <ion-select-option value="203">203</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+    <ion-label position="floating">Residente</ion-label>
+    <ion-input [(ngModel)]="residente" type="text" ></ion-input>
+
+  </ion-item>
+  <ion-button expand="full"  (click)="ingresar_paquete()">Enviar</ion-button>
+ 
+
+</ion-content>
+<ion-button expand="full"  (click)="volver()">Volver</ion-button>
