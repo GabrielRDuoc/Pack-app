@@ -13,9 +13,9 @@ import { Observable } from "rxjs/internal/Observable";
 export class BdserviceService{
 
     public database!: SQLiteObject;
-    tablaClientes: string= "CREATE TABLE IF NOT EXIST  cliente (id_cliente INTEGER PRIMARY KEY, nombre VARCHAR(40),apellido VARCHAR(40),correo VARCHAR(40),contraseña VARCHAR(40));";
-    primerCliente:string= "INSERT OR IGNORE INTO cliente (id_cliente,nombre,apellido,correo,contraseña) VALUES (1,residente,test,residente@test.cl,prueba123);";
-    SegundoCliente:string= "INSERT OR IGNORE INTO cliente (id_cliente,nombre,apellido,correo,contraseña) VALUES (1,conserje,test,conserje@test.cl,prueba123);";
+    tablaClientes: string = "CREATE TABLE IF NOT EXISTS cliente (id_cliente INTEGER PRIMARY KEY AUTOINCREMENT, nombre VARCHAR(40), apellido VARCHAR(40), correo VARCHAR(40), contraseña VARCHAR(40), cat VARCHAR(20), departamento VARCHAR(40));";
+    primerCliente:string= "INSERT OR IGNORE INTO cliente (nombre,apellido,correo,contraseña,cat,departamento) VALUES ('residente','test','residente@test.cl','prueba123','user','101');";
+    SegundoCliente:string= "INSERT OR IGNORE INTO cliente (nombre,apellido,correo,contraseña,cat) VALUES ('conserje','test','conserje@test.cl','prueba123','admin');";
     listaUsuarios=new BehaviorSubject([]);
     private isDBReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
     
@@ -54,12 +54,15 @@ export class BdserviceService{
    }
    async crearTablas(){
     try{
+      await this.database.executeSql("DROP TABLE IF EXISTS cliente",[]);
       await this.database.executeSql(this.tablaClientes,[]);
       await this.database.executeSql(this.primerCliente,[]);
+      await this.database.executeSql(this.SegundoCliente,[]);
 
       this.buscarCliente();
       this.isDBReady.next(true);
     }catch(e){
+      console.log(e)
       this.presentToast("Error Tablas"+ e);
     }
    }
@@ -72,9 +75,10 @@ export class BdserviceService{
           items.push({
             id_cliente:res.rows.item(i).id_cliente,
             nombre: res.rows.item(i).nombre,
-            apellido: res.rows.items(i).apellido,
+            apellido: res.rows.item(i).apellido,
             correo: res.rows.item(i).correo,
-            contraseña: res.rows.item(i).contraseña
+            contraseña: res.rows.item(i).contraseña,
+            cat:res.rows.item(i).cat
           })
         }
       }
@@ -83,9 +87,9 @@ export class BdserviceService{
 
     
    }
-   async insertarCliente(titulo: any, texto: any){
-    let data = [titulo,texto];
-    return this.database.executeSql('INSERT INTO cliente(id_cliente,nombre,apellido,correo,contraseña) VALUES (?,?,?,?,?)',data).then(res=>{
+   async insertarCliente(nombre: any, apellido: any, correo: any, contraseña: any,depto:any,cat: any){
+    let data = [nombre,apellido,correo,contraseña,depto,cat];
+    return this.database.executeSql('INSERT INTO cliente(nombre,apellido,correo,contraseña,departamento,cat) VALUES (?,?,?,?,?,?)',data).then(res=>{
       this.buscarCliente();
     });
 
@@ -99,7 +103,7 @@ export class BdserviceService{
 
   async eliminarCliente(correo: any){
 
-    return this.database.executeSql('DELETE FROM cliente WHERE icorreo = ?',[correo]).then(a=>{
+    return this.database.executeSql('DELETE FROM cliente WHERE correo = ?',[correo]).then(a=>{
       this.buscarCliente();
     })
 

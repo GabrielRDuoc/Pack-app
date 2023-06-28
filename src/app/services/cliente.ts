@@ -4,5 +4,6 @@ export class Cliente {
     apellido:string="";
     correo:string="";
     contraseña:string="";
+    cat:string=""
 
 }

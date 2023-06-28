@@ -7,49 +7,45 @@ import { BdserviceService } from '../services/dbservice.service';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-correo: string="";
-clave: string= ""
-Clientes:any= [{
-  id_cliente:0,
-  nombre:"",
-  apellido:"",
-  correo:"",
-  contraseña:""
+  correo: string = "";
+  clave: string = ""
 
-}]
+  Clientes: any = [{
+    id_cliente: 0,
+    nombre: "",
+    apellido: "",
+    correo: "",
+    contraseña: ""
+
+  }] as const
   toastController: any;
-  
-constructor(private router: Router,private servicioBD:BdserviceService) { }
 
-async presentToast(msj:string) {
-  const toast = await this.toastController.create({
-    message: msj,
-    duration: 2000,
-  });
-  toast.present();
-}
-    
-    login(){
-      this.Clientes
-      for(var val of this.Clientes){
-        if(val.correo==this.correo && val.contraseña==this.clave){
-          this.router.navigateByUrl('/ingresar')
-        } else if(val.correo=="conserje@test.cl" && val.contraseña=="prueba123"){
-          this.router.navigateByUrl('/home')
-        }else{
-          console.log("Usuario no registrado")
-        }
-      }
+  constructor(private router: Router, private servicioBD: BdserviceService) { }
+
+  async presentToast(msj: string) {
+    const toast = await this.toastController.create({
+      message: msj,
+      duration: 2000,
+    });
+    toast.present();
+  }
+
+  login() {
+    const cliente=this.Clientes.find((cliente: { correo: string; contraseña: string; }) => cliente.correo===this.correo&&cliente.contraseña===this.clave);
+    if(cliente){
+      if(cliente.cat==="admin") this.router.navigateByUrl('/ingresar')
+      else this.router.navigateByUrl('/home-client');
     }
-    registrar(){
-      this.router.navigateByUrl('/register')
-    }
+  }
+  registrar() {
+    this.router.navigateByUrl('/register')
+  }
   ngOnInit() {
-    this.servicioBD.dbstate().subscribe(res =>{
-      if(res){
-        this.servicioBD.fetchClientes().subscribe(item=>{
-          this.Clientes=item;
-                  })
+    this.servicioBD.dbstate().subscribe(res => {
+      if (res) {
+        this.servicioBD.fetchClientes().subscribe(item => {
+          this.Clientes = item;
+        })
       }
     });
   }
