@@ -23,10 +23,8 @@
   <ion-item>
     <ion-list>
       <ion-item>
-        <ion-select [(ngModel)]="departamento" aria-label="departamento" placeholder="numero departamento">
-          <ion-select-option value="201">201</ion-select-option>
-          <ion-select-option value="202">202</ion-select-option>
-          <ion-select-option value="203">203</ion-select-option>
+        <ion-select placeholder="Seleccione usuario" [(ngModel)]="residente">
+          <ion-select-option *ngFor="let usu of residentes" [value]="usu">{{usu.name}}</ion-select-option>
         </ion-select>
       </ion-item>
     </ion-list>
